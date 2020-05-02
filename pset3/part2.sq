@@ -1,0 +1,60 @@
+data BST a where
+  Empty :: BST a
+  Node  :: x: a -> l: BST {a | _v < x} -> r: BST {a | x < _v} -> BST a
+
+data SortedList a where
+  Nil :: SortedList a
+  Cons:: x: a -> xs:SortedList { a | _v < x } -> SortedList a
+
+termination measure height :: BST a -> {Int | _v >= 0} where
+  Empty -> 0
+  Node x l r -> 1 + if (height l) < (height r) then (height r) else (height l)
+
+measure keys :: BST a -> Set a where
+  Empty -> []
+  Node x l r -> keys l + keys r + [x]
+
+measure vals :: SortedList a -> Set a where
+  Nil -> []
+  Cons x xs -> vals xs + [x]
+
+merge :: x: SortedList a -> y: SortedList a -> {SortedList a | vals _v == vals x + vals y}
+
+helper :: b: BST a -> s: {SortedList a | orderedPair b s} -> {SortedList a | vals _v == keys b + vals s}
+
+-- output has values of s and b
+-- elements in s must all be less than elements in b
+-- output is sorted 
+-- start by putting smallest elements into s
+
+    -- true :: {Bool | _v}
+-- false :: {Bool | !_v}
+
+-- returns true if s el's < b el's 
+measure orderedPair :: b:BST a -> SortedList a -> Bool where
+  Nil -> True
+  Cons x xs -> upperBound x b
+
+-- how to express that sortedlist are all bounded by BST?
+-- max of sortedlist is < min of BST?
+-- take two sets, and return true if right set is greater than left set?
+--  bst is greater than list if 
+measure upperBound :: x:a -> BST b -> Bool where
+  Empty -> True
+  Node x l r -> if (r == Empty) then (b <= x) else (upperBound b r)
+    -- | r == Empty -> b <= x
+    -- | otherwise -> upperBound b r
+
+-- measure max :: SortedList a -> a where
+--   Nil -> 0
+--   Cons x xs
+--     | xs == Nil -> x
+--     | otherwise -> max xs
+
+
+
+transform :: x: BST a -> {SortedList a | vals _v == keys x}
+
+transform = ??
+
+

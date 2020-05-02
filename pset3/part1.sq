@@ -1,0 +1,26 @@
+data BST a where
+  Empty :: BST a
+  Node  :: x: a -> l: BST {a | _v < x} -> r: BST {a | x < _v} -> BST a
+
+data SortedList a where
+  Nil :: SortedList a
+  Cons:: x: a -> xs:SortedList { a | _v < x } -> SortedList a
+
+termination measure height :: BST a -> {Int | _v >= 0} where
+  Empty -> 0
+  Node x l r -> 1 + if (height l) < (height r) then (height r) else (height l)
+
+measure keys :: BST a -> Set a where
+  Empty -> []
+  Node x l r -> keys l + keys r + [x]
+
+measure vals :: SortedList a -> Set a where
+  Nil -> []
+  Cons x xs -> vals xs + [x]
+
+merge :: x: SortedList a -> y: SortedList a -> {SortedList a | vals _v == vals x + vals y}
+
+transform :: x: BST a -> {SortedList a | vals _v == keys x}
+transform = ??
+
+

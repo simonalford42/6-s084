@@ -1,0 +1,50 @@
+generator int exp([int nvars, int nconsts], int bnd, int[nvars] vars, int[nconsts] consts){
+    assert bnd >= 0;
+    if (??) {
+        int t = ??;
+        for (int i = 0; i < nvars; i++) {
+            if (t == i) { return vars[i];}
+        }
+    } else if (??) {
+        int t2 = ??;
+        for (int i = 0; i < nconsts; i++) {
+            if (t2 == i) { return consts[i];}
+        }
+    } else {
+        int a1 = exp(bnd-1, vars, consts);
+        int a2 = exp(bnd-1, vars, consts);
+        if (??) {
+            return {| a1 (+ | * ) a2 |};
+        } else {
+            return boolExp(bnd-1, vars, consts) ? a1 : a2;
+        }
+    }
+}
+
+generator bit boolExp([int nvars, int nconsts], int bnd, int[nvars] vars, int[nconsts] consts){
+    assert bnd >= 0;
+    int t = ??;
+
+    if (t == 0) {
+        return false;
+    } else if (t == 1) {
+        return exp(bnd-1, vars, consts) < exp(bnd-1, vars, consts);
+    } else {
+        bit b1 = boolExp(bnd-1, vars, consts);
+        if (t == 2) { 
+            return !b1;
+        } else {
+            return b1 && boolExp(bnd-1, vars, consts);
+        }
+    }
+}
+    
+
+int solution([int nvars, int nconsts], int[nvars] vars, int[nconsts] consts) {
+    return exp(3, vars, consts);
+}
+
+harness void testtest() {
+    assert solution({5, 5}, {2}) == 15;
+    assert solution({8, 3}, {2}) == 3;
+}

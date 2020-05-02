@@ -1,0 +1,348 @@
+/* BEGIN PACKAGE ANONYMOUS*/
+/*problem1.sk:27*/
+
+void control ([int n], ref int myi, ref int myj, int[2][n] obstacles, int[2] goal)/*problem1.sk:27*/
+{
+  int exp1_s19 = (goal[0]) - myi;
+  bit _has_out__0 = 0;
+  int exp1_s11 = 0;
+  if(exp1_s19 > 0)/*problem1.sk:46*/
+  {
+    exp1_s11 = 1;
+    _has_out__0 = 1;
+  }
+  if(_has_out__0 == 0)/*problem1.sk:49*/
+  {
+    if(exp1_s19 < 0)/*problem1.sk:49*/
+    {
+      exp1_s11 = -1;
+      _has_out__0 = 1;
+    }
+  }
+  if(_has_out__0 == 0)/*problem1.sk:54*/
+  {
+    bit _has_out__1 = 0;
+    if((goal[1]) > 0)/*problem1.sk:46*/
+    {
+      _has_out__1 = 1;
+    }
+    if(_has_out__1 == 0)/*problem1.sk:49*/
+    {
+      if((goal[1]) < 0)/*problem1.sk:49*/
+      {
+        _has_out__1 = 1;
+      }
+    }
+    assert (!(_has_out__1 == 0)); //ASSERTION CAN NOT BE SATISFIED: problem1.sk:44 Function exp was not inlined enough. Increase inlining with --inlineamnt flag.
+  }
+  assert ((-2 < exp1_s11) && (exp1_s11 < 2)); //Assert at problem1.sk:63 (0)
+  int exp1_s19_1 = (goal[1]) - myj;
+  bit _has_out__2 = 0;
+  int exp2_s13 = 0;
+  if(exp1_s19_1 > 0)/*problem1.sk:46*/
+  {
+    exp2_s13 = 1;
+    _has_out__2 = 1;
+  }
+  if(_has_out__2 == 0)/*problem1.sk:49*/
+  {
+    if(exp1_s19_1 < 0)/*problem1.sk:49*/
+    {
+      exp2_s13 = -1;
+      _has_out__2 = 1;
+    }
+  }
+  if(_has_out__2 == 0)/*problem1.sk:54*/
+  {
+    bit _has_out__3 = 0;
+    if((goal[0]) > 0)/*problem1.sk:46*/
+    {
+      _has_out__3 = 1;
+    }
+    if(_has_out__3 == 0)/*problem1.sk:49*/
+    {
+      if((goal[0]) < 0)/*problem1.sk:49*/
+      {
+        _has_out__3 = 1;
+      }
+    }
+    assert (!(_has_out__3 == 0)); //ASSERTION CAN NOT BE SATISFIED: problem1.sk:44 Function exp was not inlined enough. Increase inlining with --inlineamnt flag.
+  }
+  assert ((-2 < exp2_s13) && (exp2_s13 < 2)); //Assert at problem1.sk:65 (0)
+  int tmpi = myi + exp1_s11;
+  int tmpj = myj + exp2_s13;
+  bit _out_s15 = 0;
+  inBounds(tmpi, tmpj, _out_s15);
+  assert (_out_s15); //Assert at problem1.sk:68 (0)
+  bit _out_s17 = 0;
+  hasCollision(n, obstacles, tmpi, tmpj, _out_s17)//{};
+  bit _has_out_ = 0;
+  if(!(_out_s17))/*problem1.sk:69*/
+  {
+    myi = tmpi;
+    myj = tmpj;
+    _has_out_ = 1;
+  }
+  int exp1_s11_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:62*/
+  {
+    exp1_s11_0 = 0;
+    int exp1_s19_3 = myi + (goal[1]);
+    bit _has_out__4 = 0;
+    if(exp1_s19_3 > 0)/*problem1.sk:46*/
+    {
+      exp1_s11_0 = 1;
+      _has_out__4 = 1;
+    }
+    if(_has_out__4 == 0)/*problem1.sk:49*/
+    {
+      if(exp1_s19_3 < 0)/*problem1.sk:49*/
+      {
+        exp1_s11_0 = -1;
+        _has_out__4 = 1;
+      }
+    }
+    assert (!(_has_out__4 == 0)); //ASSERTION CAN NOT BE SATISFIED: problem1.sk:44 Function exp was not inlined enough. Increase inlining with --inlineamnt flag.
+  }
+  if(_has_out_ == 0)/*problem1.sk:63*/
+  {
+    assert ((-2 < exp1_s11_0) && (exp1_s11_0 < 2)); //Assert at problem1.sk:63 (0)
+  }
+  int exp2_s13_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:64*/
+  {
+    exp2_s13_0 = (1 - (goal[1])) - (0 - (goal[1]));
+  }
+  if(_has_out_ == 0)/*problem1.sk:65*/
+  {
+    assert ((-2 < exp2_s13_0) && (exp2_s13_0 < 2)); //Assert at problem1.sk:65 (0)
+  }
+  int tmpi_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:66*/
+  {
+    tmpi_0 = myi + exp1_s11_0;
+  }
+  int tmpj_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:67*/
+  {
+    tmpj_0 = myj + exp2_s13_0;
+  }
+  bit _out_s15_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:68*/
+  {
+    inBounds(tmpi_0, tmpj_0, _out_s15_0);
+  }
+  if(_has_out_ == 0)/*problem1.sk:68*/
+  {
+    assert (_out_s15_0); //Assert at problem1.sk:68 (0)
+  }
+  bit _out_s17_0 = 0;
+  if(_has_out_ == 0)/*problem1.sk:69*/
+  {
+    hasCollision(n, obstacles, tmpi_0, tmpj_0, _out_s17_0)//{};
+  }
+  if(_has_out_ == 0)/*problem1.sk:69*/
+  {
+    if(!(_out_s17_0))/*problem1.sk:69*/
+    {
+      myi = tmpi_0;
+      myj = tmpj_0;
+      _has_out_ = 1;
+    }
+  }
+  if(_has_out_ == 0)/*problem1.sk:62*/
+  {
+    bit _has_out__5 = 0;
+    if((goal[1]) > 0)/*problem1.sk:46*/
+    {
+      _has_out__5 = 1;
+    }
+    if(_has_out__5 == 0)/*problem1.sk:49*/
+    {
+      if((goal[1]) < 0)/*problem1.sk:49*/
+      {
+        _has_out__5 = 1;
+      }
+    }
+    assert (!(_has_out__5 == 0)); //ASSERTION CAN NOT BE SATISFIED: problem1.sk:44 Function exp was not inlined enough. Increase inlining with --inlineamnt flag.
+  }
+  int exp2_s13_1 = 0;
+  if(_has_out_ == 0)/*problem1.sk:64*/
+  {
+    exp2_s13_1 = (goal[0]) + (1 - (goal[0]));
+  }
+  if(_has_out_ == 0)/*problem1.sk:65*/
+  {
+    assert ((-2 < exp2_s13_1) && (exp2_s13_1 < 2)); //Assert at problem1.sk:65 (0)
+  }
+  int tmpi_1 = 0;
+  if(_has_out_ == 0)/*problem1.sk:66*/
+  {
+    tmpi_1 = myi;
+  }
+  int tmpj_1 = 0;
+  if(_has_out_ == 0)/*problem1.sk:67*/
+  {
+    tmpj_1 = myj + exp2_s13_1;
+  }
+  bit _out_s15_1 = 0;
+  if(_has_out_ == 0)/*problem1.sk:68*/
+  {
+    inBounds(tmpi_1, tmpj_1, _out_s15_1);
+  }
+  if(_has_out_ == 0)/*problem1.sk:68*/
+  {
+    assert (_out_s15_1); //Assert at problem1.sk:68 (0)
+  }
+  bit _out_s17_1 = 0;
+  if(_has_out_ == 0)/*problem1.sk:69*/
+  {
+    hasCollision(n, obstacles, tmpi_1, tmpj_1, _out_s17_1)//{};
+  }
+  if(_has_out_ == 0)/*problem1.sk:69*/
+  {
+    if(!(_out_s17_1))/*problem1.sk:69*/
+    {
+      myi = tmpi_1;
+      myj = tmpj_1;
+    }
+  }
+  return;
+}
+/*problem1.sk:2*/
+
+void hasCollision ([int n], int[2][n] obstacles, int i, int j, ref bit _out)/*problem1.sk:2*/
+{
+  for(int k = 0; k < n; k = k + 1)/*Canonical*/
+  {
+    if(((obstacles[k][0]) == i) && ((obstacles[k][1]) == j))/*problem1.sk:4*/
+    {
+      _out = 1;
+      return;
+    }
+  }
+  _out = 0;
+  return;
+}
+/*problem1.sk:23*/
+
+void inBounds (int i, int j, ref bit _out)/*problem1.sk:23*/
+{
+  _out = (((i < 8) && (i >= 0)) && (j < 8)) && (j >= 0);
+  return;
+}
+/*problem1Tests.sk:15*/
+
+void runAgent ([int n], int[2][n] obstacles, int[2] goal, ref bit _out)/*problem1Tests.sk:15*/
+{
+  int myj = 0;
+  int myi = 0;
+  for(int i = 0; i < 24; i = i + 1)/*Canonical*/
+  {
+    control(n, myi, myj, obstacles, goal)//{};
+    if((myi == (goal[0])) && (myj == (goal[1])))/*problem1Tests.sk:23*/
+    {
+      _out = 1;
+      return;
+    }
+  }
+  _out = 0;
+  return;
+}
+/*problem1Tests.sk:30*/
+
+void testController ()/*problem1Tests.sk:30*/
+{
+  int[2][3] __sa48 = {0,0,0};
+  __sa48[0] = {1,1};
+  __sa48[1] = {3,3};
+  __sa48[2] = {7,6};
+  int[2][3] obstacles = __sa48;
+  int[2] goal = {7,7};
+  bit _out_s1 = 0;
+  runAgent(3, __sa48, goal, _out_s1)//{};
+  assert (_out_s1 == 1); //Assert at problem1Tests.sk:33 (0)
+  int[2][1] __sa51 = {0};
+  __sa51[0] = {3,0};
+  for(int __sa49 = 0; __sa49 < 3; __sa49 = __sa49 + 1)/*Canonical*/
+  {
+    if(__sa49 < 1)/*problem1Tests.sk:35*/
+    {
+      obstacles[__sa49] = __sa51[__sa49];
+    }
+    else
+    {
+      obstacles[__sa49] = ((int[2])0);
+    }
+  }
+  goal = {5,0};
+  bit _out_s3 = 0;
+  runAgent(3, obstacles, goal, _out_s3)//{};
+  assert (_out_s3 == 1); //Assert at problem1Tests.sk:37 (0)
+  int[2][2] __sa54 = {0,0};
+  __sa54[0] = {0,2};
+  __sa54[1] = {1,5};
+  for(int __sa52 = 0; __sa52 < 3; __sa52 = __sa52 + 1)/*Canonical*/
+  {
+    if(__sa52 < 2)/*problem1Tests.sk:39*/
+    {
+      obstacles[__sa52] = __sa54[__sa52];
+    }
+    else
+    {
+      obstacles[__sa52] = ((int[2])0);
+    }
+  }
+  goal = {1,6};
+  bit _out_s5 = 0;
+  runAgent(3, obstacles, goal, _out_s5)//{};
+  assert (_out_s5 == 1); //Assert at problem1Tests.sk:41 (0)
+  int[2][2] __sa57 = {0,0};
+  __sa57[0] = {0,2};
+  __sa57[1] = {1,5};
+  for(int __sa55 = 0; __sa55 < 3; __sa55 = __sa55 + 1)/*Canonical*/
+  {
+    if(__sa55 < 2)/*problem1Tests.sk:43*/
+    {
+      obstacles[__sa55] = __sa57[__sa55];
+    }
+    else
+    {
+      obstacles[__sa55] = ((int[2])0);
+    }
+  }
+  goal = {0,6};
+  bit _out_s7 = 0;
+  runAgent(3, obstacles, goal, _out_s7)//{};
+  assert (_out_s7 == 1); //Assert at problem1Tests.sk:45 (0)
+  int[2][1] __sa60 = {0};
+  __sa60[0] = {2,2};
+  for(int __sa58 = 0; __sa58 < 3; __sa58 = __sa58 + 1)/*Canonical*/
+  {
+    if(__sa58 < 1)/*problem1Tests.sk:47*/
+    {
+      obstacles[__sa58] = __sa60[__sa58];
+    }
+    else
+    {
+      obstacles[__sa58] = ((int[2])0);
+    }
+  }
+  goal = {6,5};
+  bit _out_s9 = 0;
+  runAgent(3, obstacles, goal, _out_s9)//{};
+  assert (_out_s9 == 1); //Assert at problem1Tests.sk:49 (0)
+}
+/*problem1Tests.sk:30*/
+
+void testController__Wrapper ()  implements testController__WrapperNospec/*problem1Tests.sk:30*/
+{
+  testController();
+}
+/*problem1Tests.sk:30*/
+
+void testController__WrapperNospec ()/*problem1Tests.sk:30*/
+{ }
+/* END PACKAGE ANONYMOUS*/
+[SKETCH] DONE
+Total time = 3606110

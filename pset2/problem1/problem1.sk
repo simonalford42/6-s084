@@ -1,0 +1,147 @@
+// checks for collisions
+bit hasCollision([int n], int[2][n] obstacles, int i, int j) {
+    for (int k = 0; k < n; k++) {
+        if (obstacles[k][0] == i && obstacles[k][1] == j) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// inlined per piazza recommendations, so I don't use this anymore.
+int rect(int x){
+    if(x > 0){
+        return 1;
+    }
+    if(x < 0){
+        return -1;
+    }
+    return 0;
+}
+
+// inlined per piazza recommendations, so not used any more
+bit inBounds(int i, int j) {
+    return i < 8 && i >= 0 && j < 8 && j >= 0;
+}
+
+void control([int n], ref int myi, ref int myj, int[2][n] obstacles, int[2] goal) {
+    return controlGen2(myi, myj, obstacles, goal);
+}
+
+
+generator int exp(int myi, int myj, int[2] goal, int bnd) {
+    assert bnd >= 0;
+    int t = ??;
+    if (t == 0){ return 0; }
+    if (t == 1){ return 1; }
+    if (t == 2){ return -1; }
+
+    if (t == 3){ return myi; }
+    if (t == 4){ return myj; }
+
+    if (t == 5){ return goal[0]; }
+    if (t == 6){ return goal[1]; }
+    int exp1 = exp(myi, myj, goal, bnd-1);
+    if (t == 7){ 
+        if(exp1 > 0){
+            return 1;
+        }
+        if(exp1 < 0){
+            return -1;
+        }
+    }
+
+    int exp2 = exp(myi, myj, goal, bnd-1);
+    if (t == 8){ return exp1 + exp2; }
+    if (t == 9){ return exp1 - exp2; }
+}
+
+
+generator void controlGen([int n], ref int myi, ref int myj, int[2][n] obstacles, int[2] goal) {
+    repeat(3) {
+        int exp1 = exp(myi, myj, goal, 2);
+        assert -2 < exp1 && exp1 < 2;
+        int exp2 = exp(myi, myj, goal, 2);
+        assert -2 < exp2 && exp2 < 2;
+        int tmpi = myi + exp1;
+        int tmpj = myj + exp2;
+        assert tmpi < 8 && tmpi >= 0 && tmpj < 8 && tmpj >= 0;
+        if (!hasCollision(obstacles, tmpi, tmpj)) {
+            myi = tmpi;
+            myj = tmpj;
+            return;
+        }   
+    }
+}
+
+// solution which bounds the second and third assignment exp's to depth one,
+// which synthesizes in around 16 minutes.
+generator void controlGen2([int n], ref int myi, ref int myj, int[2][n] obstacles, int[2] goal) {
+    int exp1 = exp(myi, myj, goal, 2);
+    assert -2 < exp1 && exp1 < 2;
+    int exp2 = exp(myi, myj, goal, 2);
+    assert -2 < exp2 && exp2 < 2;
+    int tmpi = myi + exp1;
+    int tmpj = myj + exp2;
+    assert tmpi < 8 && tmpi >= 0 && tmpj < 8 && tmpj >= 0;
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }   
+
+    exp1 = exp(myi, myj, goal, 0);
+    assert -2 < exp1 && exp1 < 2;
+    exp2 = exp(myi, myj, goal, 0);
+    assert -2 < exp2 && exp2 < 2;
+    tmpi = myi + exp1;
+    tmpj = myj + exp2;
+    assert tmpi < 8 && tmpi >= 0 && tmpj < 8 && tmpj >= 0;
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }   
+    exp1 = exp(myi, myj, goal, 0);
+    assert -2 < exp1 && exp1 < 2;
+    exp2 = exp(myi, myj, goal, 0);
+    assert -2 < exp2 && exp2 < 2;
+    tmpi = myi + exp1;
+    tmpj = myj + exp2;
+    assert tmpi < 8 && tmpi >= 0 && tmpj < 8 && tmpj >= 0;
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }   
+}
+
+// a handwritten solution based on what was synthesized during runs when I had
+// more skeleton code provided for the synthesizer to use.
+generator void controlSolution([int n], ref int myi, ref int myj, int[2][n] obstacles, int[2] goal) {
+    int tmpi = myi + rect(goal[0] - myi);
+    int tmpj = myj + rect(goal[1] - myj);
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }
+
+    tmpi = myi + 0;
+    tmpj = myj + 1;
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }   
+
+    tmpi = myi + 1;
+    tmpj = myj + 0;
+    if (!hasCollision(obstacles, tmpi, tmpj)) {
+        myi = tmpi;
+        myj = tmpj;
+        return;
+    }   
+}
+
+

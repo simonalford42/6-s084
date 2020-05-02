@@ -1,0 +1,21 @@
+generator int rec(int x, int y, int z){
+    if(??){
+        return {| x | y | z |};
+    }else{
+        return {| rec(x,y,z) (+ | - | *) rec(x,y,z) |};
+    }
+}
+
+int solution(int x, int y, int z) {
+    return rec(x, y, z);
+}
+
+harness void sketch(){
+    assert solution(5,2, 3) == 10;
+    assert solution(10, 10, 10) == 30;
+}
+
+//harness void doubleSketch(int x){
+//    int t = x * ??;
+//    assert t == x + x;
+//}

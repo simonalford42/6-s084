@@ -1,0 +1,66 @@
+pragma options  "--bnd-inline-amnt 3";
+
+
+generator int exp([int nvars, int nconsts], int bnd, int[nvars] vars, int[nconsts] consts){
+    assert bnd >= 0;
+    if (??) {
+        int t = ??;
+        for (int i = 0; i < nvars; i++) {
+            if (t == i) { return vars[i];}
+        }
+    } else if (??) {
+        int t2 = ??;
+        for (int i = 0; i < nconsts; i++) {
+            if (t2 == i) { return consts[i];}
+        }
+    } else {
+        int a1 = exp(bnd-1, vars, consts);
+        int a2 = exp(bnd-1, vars, consts);
+        if (??) {
+            return {| a1 (+ | * ) a2 |};
+        } else {
+            return boolExp(bnd-1, vars, consts) ? a1 : a2;
+        }
+    }
+}
+
+generator bit boolExp([int nvars, int nconsts], int bnd, int[nvars] vars, int[nconsts] consts){
+    assert bnd >= 0;
+    int t = ??;
+
+    if (t == 0) {
+        return false;
+    } else if (t == 1) {
+        return exp(bnd-1, vars, consts) < exp(bnd-1, vars, consts);
+    } else {
+        bit b1 = boolExp(bnd-1, vars, consts);
+        if (t == 2) { 
+            return !b1;
+        } else {
+            return b1 && boolExp(bnd-1, vars, consts);
+        }
+    }
+}
+
+int solution1([int nvars, int nconsts], int[nvars] vars, int[nconsts] consts) {
+    return exp(3, vars, consts);
+}
+int solution2([int nvars, int nconsts], int[nvars] vars, int[nconsts] consts) {
+    return exp(3, vars, consts);
+}
+
+harness void experiment1(){
+    assert solution1({5, 5}, {}) == 15;
+    assert solution1({8, 3}, {}) == 14;
+    assert solution1({1234, 227}, {}) == 1688;
+}
+
+harness void experiment2(){ 
+    assert solution2({10, 7}, {-1}) == 17;
+    assert solution2({4, 7}, {-1}) == -7;
+    assert solution2({10, 3}, {-1}) == 13;
+    assert solution2({1, -7}, {-1}) == -6;
+    assert solution2({1, 8}, {-1}) == -8;
+}
+
+
