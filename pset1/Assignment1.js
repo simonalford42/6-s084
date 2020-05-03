@@ -282,6 +282,11 @@ function makeTerminalMap(plist) {
         }
     }
 
+    console.log("pmap: ");
+    for (let type of map.keys()) {
+        console.log(type.toString() + ": " + map.get(type).toString())
+    }
+
     return map;
 }
 
@@ -310,8 +315,8 @@ function generateArgs(pMap, argTypes) {
 
     if (argTypes.length === 1) {
         var args = [];
-        // console.log('at: ' + argTypes[0])
-        // console.log('pmap: ' + pMap.get(argTypes[0]));
+        console.log('at: ' + argTypes[0])
+        console.log('pmap: ' + pMap.get(argTypes[0]));
 
         for (let term of pMap.get(argTypes[0])) {
             args.push([term]);
@@ -436,11 +441,12 @@ function grow(plist, intOps, boolOps) {
     let newPlist = [];
     var i = 0;
 
+    var pmap = makeTerminalMap(plist);
+
     for (let op of intOps.concat(boolOps)) {
         console.log('op: ' + op);
         var argTypes = getArgTypes(op);
         // console.log('arg types: ' + argTypes);
-        var pmap = makeTerminalMap(plist);
         var possibleArgs = generateArgs2(pmap, argTypes);
         console.log('possible args : ' + possibleArgs);
         for (let args of possibleArgs) {
