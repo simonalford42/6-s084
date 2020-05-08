@@ -1,3 +1,6 @@
+-- I think I have most of the pieces, I just couldn't get them to come together the final way.
+-- In terms of following the hints, I got stuck at updating the BST type signature
+
 data BST a where
   Empty :: BST a
   Node  :: x: a -> l: BST {a | _v < x} -> r: BST {a | x < _v} -> BST a
@@ -9,7 +12,7 @@ data SortedList a where
 termination measure height :: BST a -> {Int | _v >= 0} where
   Empty -> 0
   Node x l r -> 1 + if (height l) < (height r) then (height r) else (height l)
-
+    
 measure keys :: BST a -> Set a where
   Empty -> []
   Node x l r -> keys l + keys r + [x]
@@ -17,43 +20,45 @@ measure keys :: BST a -> Set a where
 measure vals :: SortedList a -> Set a where
   Nil -> []
   Cons x xs -> vals xs + [x]
+  
+-- returns true if y is an upper bound of all elements in BST b
+-- measure upperBound :: y:a -> BST a -> Bool where
+--  Empty -> True
+--  Node x l r -> if (r == Empty) then (y >= x) else (upperBound y r)
 
-merge :: x: SortedList a -> y: SortedList a -> {SortedList a | vals _v == vals x + vals y}
-
-helper :: b: BST a -> s: {SortedList a | orderedPair b s} -> {SortedList a | vals _v == keys b + vals s}
-
--- output has values of s and b
--- elements in s must all be less than elements in b
--- output is sorted 
--- start by putting smallest elements into s
-
-    -- true :: {Bool | _v}
--- false :: {Bool | !_v}
+-- returns true if y is a lower bound of all elements in BST b
+measure lowerBound :: y:a -> BST a -> Bool where
+  Empty -> True
+  Node x l r -> if (l == Empty) then (y <= x) else (lowerBound y l)
 
 -- returns true if s el's < b el's 
-measure orderedPair :: b:BST a -> SortedList a -> Bool where
+measure orderedPair :: b: BST a -> SortedList a -> Bool where
   Nil -> True
-  Cons x xs -> upperBound x b
+  Cons x xs -> if (xs == Nil) then (lowerBound x b) else (orderedPair b xs)
 
--- how to express that sortedlist are all bounded by BST?
--- max of sortedlist is < min of BST?
--- take two sets, and return true if right set is greater than left set?
---  bst is greater than list if 
-measure upperBound :: x:a -> BST b -> Bool where
-  Empty -> True
-  Node x l r -> if (r == Empty) then (b <= x) else (upperBound b r)
-    -- | r == Empty -> b <= x
-    -- | otherwise -> upperBound b r
+-- lemma :: a:Int -> b:{Int | a > _v} -> c:{Int | b > _v} -> {Int | _v = a && _v > c}
+lemma2 :: x:a -> b: {BST a | lowerBound x _v} -> BST {a | _v >= x }
 
--- measure max :: SortedList a -> a where
---   Nil -> 0
---   Cons x xs
---     | xs == Nil -> x
---     | otherwise -> max xs
+helper :: b: BST a -> s: {SortedList a | orderedPair b _v} -> {SortedList a | vals _v == keys b + vals s}
 
+helper = ??
+
+-- lemma3 :: x: a -> b: BST {a | _v < x } -> c: BST {a | x > _v} -> BST {a | orderedPair c (helper a Nil)}
+
+-- helper = \x . \t .
+--  match x with 
+--    Empty -> s
+--    Node m l r -> helper r (Cons m (helper l s))
+  
+
+-- output has values of s and b (done)
+-- elements in s must all be less than elements in b (ordered pair measure)
+-- output is sorted  (done)
+-- start by putting smallest elements into s
 
 
 transform :: x: BST a -> {SortedList a | vals _v == keys x}
+-- should be something like \x. helper x Nil
 
 transform = ??
 

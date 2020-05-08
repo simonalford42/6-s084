@@ -1,5 +1,6 @@
 // JavaScript source code
 
+
 var NUM = "NUM";
 var FALSE = "FALSE";
 var VR = "VAR";
