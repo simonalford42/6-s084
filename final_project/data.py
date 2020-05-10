@@ -2,10 +2,10 @@ import numpy as np
 
 
 def make_tasks():
-    training_examples_per_length = 2
-    testing_examples_per_length = 2
+    training_examples_per_length = 10
+    testing_examples_per_length = 10
     min_length = 4
-    max_length = 5
+    max_length = 10
 
     task_dict = {f_name: make_task(task_function, training_examples_per_length,
             testing_examples_per_length, min_length, max_length) 
@@ -59,7 +59,7 @@ def get_task_functions():
 
     def parity(i1, i2):
         count = sum(i1)
-        return [1 if count % 2 == 0 else 0]
+        return [1 if count % 2 == 0 else 0] * len(i1)
 
     def all_zeros_if_second_odd_else_copy_first(i1, i2):
         if i2[-1] == 1:
@@ -72,8 +72,6 @@ def get_task_functions():
             parity, all_zeros_if_second_odd_else_copy_first)
 
     task_dict = {f.__name__: f for f in all_task_functions}
-
-    print(task_dict)
 
     return task_dict
 
