@@ -110,13 +110,12 @@ def end(i1, i2, ix, aux):
     return int(ix == 0)
 
 def get_for_loop_spot_fns():
-    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('i1[len(i1)-1]', c3),
-            Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6),
+    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), 
+            Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), 
             Spot('ix', index), Spot('i1[len(i1)-ix-1]', c7),
-            Spot('i2[len(i1)-ix-1]', c8), Spot('i1[ix+1]', c9),
-            Spot('i1[ix-1]', c10), Spot('i2[ix+1]', c11),
-            Spot('i2[ix-1]', c12), Spot('aux', c12), Spot('c', const),
-            Spot('end', end), Spot('i1[0]', c5)]
+            Spot('i1[ix-1]', c10),
+            Spot('aux', c12), Spot('c', const),
+            Spot('end', end)]
 
 
 def get_for_loop_originals():

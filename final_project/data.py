@@ -109,7 +109,7 @@ def get_tasks():
             (bitwise_xor, [0, 1]),
             (reverse, [0, 1]),
             (copy, list(range(0, 10))),
-            (split_halfway, [0, 1]),
+            # (split_halfway, [0, 1]),
             (alternate_bits, [0, 1]),
             (copy_1_if_1, [0, 1]),
             (insert_1, [0, 1]),

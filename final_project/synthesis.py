@@ -139,6 +139,7 @@ def test_for_loop(aux_nodeset, out_nodeset, aux_mapping, out_mapping, examples):
 def synthesize_for_loop(examples, spots, max_nodes=4, max_subsets=10000):
     for num_nodes in range(1, max_nodes + 1):
         combinations = list(itertools.combinations(spots, num_nodes))
+        print('num combinations: {}'.format(len(combinations)))
         for aux_nodeset in combinations:
             # print(aux_nodeset)
             # processes the examples on this node set to determine the right 
@@ -207,6 +208,7 @@ def run_per_index_synthesis_on_task(data_dict, task_name):
         return False
     else:
         (nodeset, mapping) = synthesis_out
+        print('nodeset: {}'.format(nodeset))
         
         # print('mapping:')
         # for val in mapping.items():
@@ -279,14 +281,14 @@ def run_per_index_on_all_tasks():
     print('failures: {}'.format(failures))
 
 
-def run_for_loop_synthesis():
+def run_for_loop_on_all_tasks():
     data_dict = data.make_tasks()
     successes = []
     failures = []
     for task_name in data_dict:
         print(task_name)
         success = run_for_loop_synthesis_on_task(data_dict, task_name,
-                spot_functions.get_for_loop_spot_fns(), max_nodes=4,
+                spot_functions.get_for_loop_spot_fns(), max_nodes=3,
                 max_subsets=10000)
         if success:
             successes.append(task_name)
@@ -318,5 +320,6 @@ def run_for_loop_originals():
 
 
 if __name__ == '__main__':
-    run_per_index_on_all_tasks()
+    # run_per_index_on_all_tasks()
     run_for_loop_originals()
+    # run_for_loop_on_all_tasks()
