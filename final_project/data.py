@@ -7,16 +7,17 @@ def make_tasks():
     min_length = 4
     max_length = 10
 
-    task_dict = {f_name: make_task(task_function, training_examples_per_length,
-            testing_examples_per_length, min_length, max_length) 
-            for f_name, task_function in get_task_functions().items()}
+    task_dict = {task_function.__name__: make_task(task_function, input_values,
+            training_examples_per_length, testing_examples_per_length,
+            min_length, max_length) 
+            for task_function, input_values in get_tasks()}
 
     # maps f_name to dict with keys train, test, and values of lists of 
     # (i1, i2, out) tuples
     return task_dict
 
 
-def get_task_functions():
+def get_tasks():
     def bitwise_and(i1, i2):
         return [a and b for (a, b) in zip(i1, i2)]
 
@@ -67,45 +68,63 @@ def get_task_functions():
         else:
             return i1
 
-    all_task_functions = (bitwise_and, bitwise_or, bitwise_xor, reverse, copy,
-            split_halfway, alternate_bits, copy_1_if_1, insert_1, addition,
-            parity, all_zeros_if_second_odd_else_copy_first)
+    def elementwise_both_even(i1, i2):
+        return [int(a % 2 == 0 and b % 2 == 0) for (a, b) in zip(i1, i2)]
 
-    task_dict = {f.__name__: f for f in all_task_functions}
+    all_tasks = ((bitwise_and, [0, 1]), 
+            (bitwise_or, [0, 1]), 
+            (bitwise_xor, [0, 1]),
+            (reverse, [0, 1]),
+            (copy, [0, 1]),
+            (split_halfway, [0, 1]),
+            (alternate_bits, [0, 1]),
+            (copy_1_if_1, [0, 1]),
+            (insert_1, [0, 1]),
+            (addition, [0, 1]),
+            (parity, [0, 1]),
+            (all_zeros_if_second_odd_else_copy_first, [0, 1]),
+            (elementwise_both_even, list(range(0, 10))))
 
-    return task_dict
+    return all_tasks
 
 
-def generate_examples(examples_per_length, min_length, max_length):
+def one_hot(i, n):
+    l = [0] * n
+    l[i] = 1
+    return l
+
+
+def generate_examples(examples_per_length, min_length, max_length,
+                      input_values):
     examples = []
     for length in range(min_length, max_length + 1):
         for i in range(examples_per_length):
-            input_1 = generate_boolean_list(length)
-            input_2 = generate_boolean_list(length)
+            input_1 = generate_list(length, input_values)
+            input_2 = generate_list(length, input_values)
             examples.append((input_1, input_2))
 
     return examples
 
 
-def generate_boolean_list(n):
-    return np.random.randint(0, 2, n).tolist()
+def generate_list(n, input_values):
+    return np.random.choice(input_values, size=n).tolist()
 
 
-def reverse(s):
-    return s[::-1]
-
-
-def make_task(task_function, training_examples_per_length=10,
+def make_task(task_function, input_values, training_examples_per_length=10,
               testing_examples_per_length=10, min_length=2, max_length=20):
     training_input = generate_examples(training_examples_per_length,
-                                       min_length, max_length)
-    training_examples = [(i1, i2, task_function(i1, i2))
-            for (i1, i2) in training_input]
+                                       min_length, max_length, input_values)
+
+    # augment with one-hot encoding of the index
+    # training_examples = [([i1, i2] + one_hot(i, len(i1)), task_function(i1, i2))
+            # for i, (i1, i2) in enumerate(training_input)]
+    training_examples = [(i1, i2, task_function(i1, i2)) for (i1, i2) in
+            training_input]
 
     testing_input = generate_examples(testing_examples_per_length, min_length,
-                                      max_length)
-    testing_examples = [(i1, i2, task_function(i1, i2))
-            for (i1, i2) in testing_input]
+                                      max_length, input_values)
+    testing_examples = [(i1, i2, task_function(i1, i2)) for (i1, i2) in
+            testing_input]
 
     return {'train': training_examples, 'test': testing_examples}
 
@@ -113,10 +132,11 @@ def make_task(task_function, training_examples_per_length=10,
 if __name__ == '__main__':
     task_dict = make_tasks()
     for f_name in task_dict:
-        print(f_name)
-        print('\ttrain')
-        for example in task_dict[f_name]['train']:
-            print('\t\t' + str(example))
-        print('\ttest')
-        for example in task_dict[f_name]['test']:
-            print('\t\t' + str(example))
+        if f_name == 'elementwise_both_even':
+            print(f_name)
+            print('\ttrain')
+            for example in task_dict[f_name]['train']:
+                print('\t\t' + str(example))
+            print('\ttest')
+            for example in task_dict[f_name]['test']:
+                print('\t\t' + str(example))
