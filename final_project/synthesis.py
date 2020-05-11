@@ -1,8 +1,9 @@
 import itertools
+import more_itertools
 import data
 
 
-def synthesize(examples):
+def synthesize_per_index(examples):
     '''
         Take as input the training examples.
         Tries to synthesize a rule that gives the output for each index in the
@@ -28,7 +29,66 @@ def synthesize(examples):
     return False
 
 
-def test(node_set, io_mapping, examples):
+def process_addition_hole_1(examples):
+    inputs = itertools.product([0, 1], [0, 1], [0, 1])
+    all_subsets = more_itertools.powerset(inputs)
+    print('num subsets: {}'.format(len(all_subsets)))
+    for yes_range in all_subsets:
+        def carry_fn(a, b, c):
+            return 1 if (a, b, c) in yes_range else 0
+        process_out = process_addition_hole_2(examples, carry_fn)
+
+        if process_out is not False:
+            add_mapping = process_out
+            carry_mapping = {input: int(input in yes_range) for input in inputs}
+            return carry_mapping, add_mapping
+
+
+def process_addition_hole_2(examples, carry_fn):
+    carry = 0
+    mapping = {}
+    for (i1, i2, o) in examples:
+        for ix in range(len(i1) - 1, -1, -1):
+            input_tuple = i1[ix], i2[ix], carry
+            if input_tuple in mapping:
+                if o[ix] != mapping[input_tuple]:
+                    return False
+            else:
+                mapping[input_tuple] = o[ix]
+
+    return mapping
+
+
+def test_for_loop(carry_mapping, add_mapping, examples):
+    bad_examples = []
+    for (i1, i2, o) in examples:
+        carry = 0
+        for ix in range(len(i1) - 1, -1, -1):
+            # add current digits, then check it's correct, then compute carry
+            input_tuple = i1[ix], i2[ix], carry
+            if input_tuple not in add_mapping:
+                bad_examples.append((i1, i2, o))
+            else:
+                prediction = add_mapping(input_tuple)
+                if o[ix] != prediction:
+                    bad_examples.append((i1, i2, o))
+
+            if input_tuple not in carry_mapping:
+                bad_examples.append((i1, i2, o))
+            else:
+                carry = carry_mapping[input_tuple]
+
+    if len(bad_examples) == 0:
+        return True
+    else:
+        return bad_examples
+
+
+def synthesize_for_loop(examples):
+    return process_addition_hole_1(examples)
+
+
+def test_per_index(node_set, io_mapping, examples):
     bad_examples = []
     for (i1, i2, o) in examples:
         for ix in range(len(i1)):
@@ -70,7 +130,7 @@ def process(node_set, examples):
     # no conflicts, so we have a valid discriminator
     # return the mapping we found to use for the future
 
-    assert test(node_set, example_mapping, examples)
+    assert test_per_index(node_set, example_mapping, examples)
     return example_mapping
 
 
@@ -133,27 +193,55 @@ def get_spot_fns():
             Spot('i2[ix-1]', c12)]
 
 
-def print_synthesis(node_set, mapping):
-    print('node set: ' + str(node_set))
-    print('mapping:')
-    for val in mapping.items():
-        print(val)
-
-
-def run_synthesis_on_task(data_dict, task_name):
-    print('running synthesis on task {}'.format(task_name))
-    synthesis_out = synthesize(data_dict[task_name]['train'])
+def run_synthesis_per_index(data_dict, task_name):
+    print('running synthesis "per index" on task {}'.format(task_name))
+    synthesis_out = synthesize_per_index(data_dict[task_name]['train'])
 
     if synthesis_out is False:
         print('Synthesis was not possible')
         return False
     else:
-        (node_set, mappings) = synthesis_out
-        print_synthesis(node_set, mappings)
-        test_out = test(node_set, mappings, data_dict[task_name]['test'])
+        (node_set, mapping) = synthesis_out
+        print('node set: ' + str(node_set))
+        print('mapping:')
+        for val in mapping.items():
+            print(val)
+
+        test_out = test_per_index(node_set, mapping, 
+                data_dict[task_name]['test'])
 
         if test_out is True:
-            print('synthesized program is correct')
+            print('synthesized program passed test cases')
+            return True
+        else:
+            bad_examples = test_out
+            print('synthesized program failed on test set:')
+            for b in bad_examples:
+                print(b)
+            return False
+
+
+def run_synthesis_for_loop(data_dict, task_name):
+    print('running synthesis "for loop" on task {}'.format(task_name))
+    synthesis_out = synthesize_for_loop(data_dict[task_name]['train'])
+
+    if synthesis_out is False:
+        print('Synthesis was not possible')
+        return False
+    else:
+        carry_mapping, add_mapping = synthesis_out
+        print('carry mapping:')
+        for val in carry_mapping.items():
+            print(val)
+        print('add mapping:')
+        for val in add_mapping.items():
+            print(val)
+
+        test_out = test_for_loop(carry_mapping, add_mapping,
+                data_dict[task_name]['test'])
+
+        if test_out is True:
+            print('synthesized program past test cases')
             return True
         else:
             bad_examples = test_out
@@ -169,7 +257,7 @@ if __name__ == '__main__':
     failures = []
     for task_name in data_dict:
         print(task_name)
-        success = run_synthesis_on_task(data_dict, task_name)
+        success = run_synthesis_per_index(data_dict, task_name)
         if success:
             successes.append(task_name)
         else:

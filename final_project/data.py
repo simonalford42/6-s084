@@ -5,7 +5,7 @@ def make_tasks():
     training_examples_per_length = 20
     testing_examples_per_length = 1000
     min_length = 4
-    max_length = 20
+    max_length = 15
 
     task_dict = {task_function.__name__: make_task(task_function, input_values,
             training_examples_per_length, testing_examples_per_length,
@@ -34,7 +34,7 @@ def get_tasks():
         return i1
 
     def split_halfway(i1, i2):
-        split = len(i1) / 2
+        split = int(len(i1) / 2)
         return i1[:split] + i2[split:]
 
     def alternate_bits(i1, i2):
@@ -49,13 +49,14 @@ def get_tasks():
     def addition(i1, i2):
         carry = 0
         out = []
-        for a, b in zip(i1, i2)[::-1]:
+        for a, b in list(zip(i1, i2))[::-1]:
             o = a + b + carry
             carry = 1 if o > 1 else 0
             o = o % 2
             out.append(o)
 
-        out = out + [carry]
+        # commented so that out length equals in length (wrap when overflowing)
+        # out = out + [carry]
         return out[::-1]
 
     def parity(i1, i2):
@@ -93,12 +94,6 @@ def get_tasks():
     return all_tasks
 
 
-def one_hot(i, n):
-    l = [0] * n
-    l[i] = 1
-    return l
-
-
 def generate_examples(examples_per_length, min_length, max_length,
                       input_values):
     examples = []
@@ -119,10 +114,6 @@ def make_task(task_function, input_values, training_examples_per_length=10,
               testing_examples_per_length=10, min_length=2, max_length=20):
     training_input = generate_examples(training_examples_per_length,
                                        min_length, max_length, input_values)
-
-    # augment with one-hot encoding of the index
-    # training_examples = [(i1, i2, list(range(0, len(i1))), task_function(i1, i2))
-            # for i, (i1, i2) in enumerate(training_input)]
     training_examples = [(i1, i2, task_function(i1, i2)) for (i1, i2) in
             training_input]
 
