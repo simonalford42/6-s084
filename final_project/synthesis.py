@@ -42,16 +42,23 @@ def get_input_ranges(nodeset, examples):
                     values.add(node.f(i1, i2, ix, a))
         input_ranges.append(values)
 
-    print('input_ranges: ' + str(input_ranges))
+    # print('input_ranges: ' + str(input_ranges))
     return input_ranges
 
 
-def process_for_loop_aux_mapping(aux_nodeset, examples):
+def process_for_loop_aux_mapping(aux_nodeset, examples, spots, max_nodes=4,
+                                 max_subsets=10000):
     # list of sets of values that are possible at each spot
     input_ranges = get_input_ranges(aux_nodeset, examples)
     num_inputs = np.prod([len(r) for r in input_ranges])
     num_subsets = 2 ** num_inputs
     print('num subsets = 2^{} = {}'.format(num_inputs, num_subsets))
+
+    if num_subsets >= max_subsets:  # give up for tasks which take too long
+        # print('task with {}'.format(num_subsets) + ' subsets is going to ' 
+        # + 'take too long, quitting'.format(num_subsets))
+        return False
+
     inputs = itertools.product(*input_ranges)
     all_subsets = more_itertools.powerset(inputs)
     for subset in all_subsets:
@@ -61,7 +68,6 @@ def process_for_loop_aux_mapping(aux_nodeset, examples):
         aux_mapping = {input: int(input in yes_range) for input in
                 itertools.product(*input_ranges)}
 
-        spots = spot_functions.get_for_loop_spot_fns()
         for num_nodes in range(1, len(aux_nodeset) + 1):
             combinations = list(itertools.combinations(spots, num_nodes))
             for out_nodeset in combinations:
@@ -130,17 +136,15 @@ def test_for_loop(aux_nodeset, out_nodeset, aux_mapping, out_mapping, examples):
         return bad_examples
 
 
-def synthesize_for_loop(examples):
-    spots = spot_functions.get_for_loop_spot_fns()
-    max_nodes = 5
-    
+def synthesize_for_loop(examples, spots, max_nodes=4, max_subsets=10000):
     for num_nodes in range(1, max_nodes + 1):
         combinations = list(itertools.combinations(spots, num_nodes))
         for aux_nodeset in combinations:
-            print(aux_nodeset)
+            # print(aux_nodeset)
             # processes the examples on this node set to determine the right 
             # output rules that makes it work. if none possible, returns false.
-            process_out = process_for_loop_aux_mapping(aux_nodeset, examples)
+            process_out = process_for_loop_aux_mapping(aux_nodeset, examples,
+                    spots, max_nodes=max_nodes, max_subsets=max_subsets)
             if process_out is not False:
                 aux_mapping, out_mapping, out_nodeset = process_out
                 return aux_nodeset, out_nodeset, aux_mapping, out_mapping
@@ -195,62 +199,66 @@ def process(nodeset, examples):
 
 
 def run_per_index_synthesis_on_task(data_dict, task_name):
-    print('running synthesis "per index" on task {}'.format(task_name))
+    # print('running synthesis "per index" on task {}'.format(task_name))
     synthesis_out = synthesize_per_index(data_dict[task_name]['train'])
 
     if synthesis_out is False:
-        print('Synthesis was not possible')
+        # print('Synthesis was not possible')
         return False
     else:
         (nodeset, mapping) = synthesis_out
-        print('node set: ' + str(nodeset))
-        print('mapping:')
-        for val in mapping.items():
-            print(val)
+        
+        # print('mapping:')
+        # for val in mapping.items():
+        #     print(val)
 
         test_out = test_per_index(nodeset, mapping, 
                 data_dict[task_name]['test'])
 
         if test_out is True:
-            print('synthesized program passed test cases')
+            # print('synthesized program passed test cases')
             return True
         else:
             bad_examples = test_out
-            print('synthesized program failed on test set:')
-            for b in bad_examples:
-                print(b)
+            # print('synthesized program failed on test set:')
+            # for b in bad_examples:
+                # print(b)
             return False
 
 
-def run_for_loop_synthesis_on_task(data_dict, task_name):
-    print('running synthesis "for loop" on task {}'.format(task_name))
-    synthesis_out = synthesize_for_loop(data_dict[task_name]['train'])
+def run_for_loop_synthesis_on_task(data_dict, task_name, spots, max_nodes=4,
+        max_subsets=10000):
+    # print('running synthesis "for loop" on task {}'.format(task_name))
+    synthesis_out = synthesize_for_loop(data_dict[task_name]['train'],
+            spots, max_nodes=max_nodes, max_subsets=max_subsets)
 
     if synthesis_out is False:
-        print('Synthesis was not possible')
+        # print('Synthesis was not possible')
         return False
     else:
         aux_nodeset, out_nodeset, aux_mapping, out_mapping = synthesis_out
-        print('aux mapping:')
-        for val in aux_mapping.items():
-            print(val)
-        print('out mapping:')
-        for val in out_mapping.items():
-            print(val)
+        # print('aux nodeset: {}'.format(aux_nodeset))
+        # print('out nodeset: {}'.format(out_nodeset))
+        # print('aux mapping:')
+        # for val in aux_mapping.items():
+            # print(val)
+        # print('out mapping:')
+        # for val in out_mapping.items():
+            # print(val)
 
         test_out = test_for_loop(aux_nodeset, out_nodeset, aux_mapping,
                 out_mapping, data_dict[task_name]['test'])
 
         if test_out is True:
-            print('synthesized program past test cases')
+            # print('synthesized program past test cases')
             return True
         else:
             bad_examples = test_out
-            print('synthesized program failed on test set:')
-            print(len(bad_examples))
-            if len(bad_examples) < 10:
-                for b in bad_examples:
-                    print(b)
+            # print('synthesized program failed on test set:')
+            # print(len(bad_examples))
+            # if len(bad_examples) < 10:
+                # for b in bad_examples:
+                    # print(b)
 
             return False
 
@@ -260,7 +268,7 @@ def run_per_index_on_all_tasks():
     successes = []
     failures = []
     for task_name in data_dict:
-        print(task_name)
+        # print(task_name)
         success = run_per_index_synthesis_on_task(data_dict, task_name)
         if success:
             successes.append(task_name)
@@ -273,12 +281,40 @@ def run_per_index_on_all_tasks():
 
 def run_for_loop_synthesis():
     data_dict = data.make_tasks()
-    # run_for_loop_synthesis_on_task(data_dict, 'addition')
-    # run_for_loop_synthesis_on_task(data_dict, 'parity')
-    # run_for_loop_synthesis_on_task(data_dict, 'addition_with_a_twist')
-    # run_for_loop_synthesis_on_task(data_dict, 'parity_single_bit')
-    run_for_loop_synthesis_on_task(data_dict, 'running_parity')
+    successes = []
+    failures = []
+    for task_name in data_dict:
+        print(task_name)
+        success = run_for_loop_synthesis_on_task(data_dict, task_name,
+                stop_functions.get_for_loop_spot_fns(), max_nodes=4,
+                max_subsets=10000)
+        if success:
+            successes.append(task_name)
+        else:
+            failures.append(task_name)
+
+    print('successes: {}'.format(successes))
+    print('failures: {}'.format(failures))
+
+def run_for_loop_originals():
+    data_dict = data.make_tasks()
+    spots = spot_functions.get_for_loop_originals()
+
+    successes = []
+    failures = []
+    for task_name in ['addition', 'parity', 'addition_with_a_twist',
+            'parity_single_bit', 'running_parity']:
+        print(task_name)
+        success = run_for_loop_synthesis_on_task(data_dict, task_name, spots,
+                max_nodes=4, max_subsets=10000)
+        if success:
+            successes.append(task_name)
+        else:
+            failures.append(task_name)
+
+    print('successes: {}'.format(successes))
+    print('failures: {}'.format(failures))
 
 
 if __name__ == '__main__':
-    run_for_loop_synthesis()
+    run_for_loop_originals()
