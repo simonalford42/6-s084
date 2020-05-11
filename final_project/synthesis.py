@@ -286,7 +286,7 @@ def run_for_loop_synthesis():
     for task_name in data_dict:
         print(task_name)
         success = run_for_loop_synthesis_on_task(data_dict, task_name,
-                stop_functions.get_for_loop_spot_fns(), max_nodes=4,
+                spot_functions.get_for_loop_spot_fns(), max_nodes=4,
                 max_subsets=10000)
         if success:
             successes.append(task_name)
@@ -295,6 +295,7 @@ def run_for_loop_synthesis():
 
     print('successes: {}'.format(successes))
     print('failures: {}'.format(failures))
+
 
 def run_for_loop_originals():
     data_dict = data.make_tasks()
@@ -317,4 +318,5 @@ def run_for_loop_originals():
 
 
 if __name__ == '__main__':
+    run_per_index_on_all_tasks()
     run_for_loop_originals()
