@@ -2,7 +2,7 @@ import numpy as np
 
 
 def make_tasks():
-    training_examples_per_length = 100
+    training_examples_per_length = 10
     testing_examples_per_length = 100
     min_length = 10
     max_length = 10
