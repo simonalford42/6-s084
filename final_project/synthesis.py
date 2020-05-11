@@ -32,22 +32,31 @@ def synthesize_per_index(examples):
 def process_addition_hole_1(examples):
     inputs = itertools.product([0, 1], [0, 1], [0, 1])
     all_subsets = more_itertools.powerset(inputs)
-    print('num subsets: {}'.format(len(all_subsets)))
-    for yes_range in all_subsets:
+    num_subsets = 0
+    for subset in all_subsets:
+        num_subsets += 1
+        yes_range = set(subset)
+
         def carry_fn(a, b, c):
-            return 1 if (a, b, c) in yes_range else 0
+            return int((a, b, c) in yes_range)
         process_out = process_addition_hole_2(examples, carry_fn)
 
         if process_out is not False:
             add_mapping = process_out
-            carry_mapping = {input: int(input in yes_range) for input in inputs}
+            carry_mapping = {input: int(input in yes_range) for input in
+                    itertools.product([0, 1], [0, 1], [0, 1])}
+
+            assert test_for_loop(carry_mapping, add_mapping, examples) is True
             return carry_mapping, add_mapping
+
+    print('tried {} subsets but failed'.format(num_subsets))
+    return False
 
 
 def process_addition_hole_2(examples, carry_fn):
-    carry = 0
     mapping = {}
     for (i1, i2, o) in examples:
+        carry = 0
         for ix in range(len(i1) - 1, -1, -1):
             input_tuple = i1[ix], i2[ix], carry
             if input_tuple in mapping:
@@ -55,6 +64,8 @@ def process_addition_hole_2(examples, carry_fn):
                     return False
             else:
                 mapping[input_tuple] = o[ix]
+
+            carry = carry_fn(i1[ix], i2[ix], carry)
 
     return mapping
 
@@ -69,7 +80,7 @@ def test_for_loop(carry_mapping, add_mapping, examples):
             if input_tuple not in add_mapping:
                 bad_examples.append((i1, i2, o))
             else:
-                prediction = add_mapping(input_tuple)
+                prediction = add_mapping[input_tuple]
                 if o[ix] != prediction:
                     bad_examples.append((i1, i2, o))
 
@@ -82,6 +93,19 @@ def test_for_loop(carry_mapping, add_mapping, examples):
         return True
     else:
         return bad_examples
+
+
+def synthesize_for_loop_given_carry(examples):
+    def carry_fn(a, b, c):
+        return int(a + b + c > 1)
+    process_out = process_addition_hole_2(examples, carry_fn)
+    if process_out is not False:
+        add_mapping = process_out
+        for val in add_mapping.items():
+            print(val)
+    else:
+        print('could not synthesize')
+        return False
 
 
 def synthesize_for_loop(examples):
@@ -130,10 +154,12 @@ def process(node_set, examples):
     # no conflicts, so we have a valid discriminator
     # return the mapping we found to use for the future
 
-    assert test_per_index(node_set, example_mapping, examples)
+    assert test_per_index(node_set, example_mapping, examples) is True
     return example_mapping
 
 
+# Exists just so that once we synthesize a program, it is easy to print out the
+# solution
 class Spot:
     def __init__(self, name, f):
         self.name = name
@@ -193,7 +219,7 @@ def get_spot_fns():
             Spot('i2[ix-1]', c12)]
 
 
-def run_synthesis_per_index(data_dict, task_name):
+def run_per_index_synthesis_on_task(data_dict, task_name):
     print('running synthesis "per index" on task {}'.format(task_name))
     synthesis_out = synthesize_per_index(data_dict[task_name]['train'])
 
@@ -221,7 +247,7 @@ def run_synthesis_per_index(data_dict, task_name):
             return False
 
 
-def run_synthesis_for_loop(data_dict, task_name):
+def run_for_loop_synthesis_on_task(data_dict, task_name):
     print('running synthesis "for loop" on task {}'.format(task_name))
     synthesis_out = synthesize_for_loop(data_dict[task_name]['train'])
 
@@ -246,18 +272,18 @@ def run_synthesis_for_loop(data_dict, task_name):
         else:
             bad_examples = test_out
             print('synthesized program failed on test set:')
-            for b in bad_examples:
-                print(b)
+            # for b in bad_examples:
+                # print(b)
             return False
 
 
-if __name__ == '__main__':
+def run_per_index_on_all_tasks():
     data_dict = data.make_tasks()
     successes = []
     failures = []
     for task_name in data_dict:
         print(task_name)
-        success = run_synthesis_per_index(data_dict, task_name)
+        success = run_per_index_synthesis_on_task(data_dict, task_name)
         if success:
             successes.append(task_name)
         else:
@@ -265,3 +291,12 @@ if __name__ == '__main__':
 
     print('successes: {}'.format(successes))
     print('failures: {}'.format(failures))
+
+
+def run_for_loop_synthesis():
+    data_dict = data.make_tasks()
+    run_for_loop_synthesis_on_task(data_dict, 'addition')
+
+
+if __name__ == '__main__':
+    run_for_loop_synthesis()

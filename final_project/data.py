@@ -2,10 +2,10 @@ import numpy as np
 
 
 def make_tasks():
-    training_examples_per_length = 20
-    testing_examples_per_length = 1000
-    min_length = 4
-    max_length = 15
+    training_examples_per_length = 100
+    testing_examples_per_length = 100
+    min_length = 10
+    max_length = 10
 
     task_dict = {task_function.__name__: make_task(task_function, input_values,
             training_examples_per_length, testing_examples_per_length,
