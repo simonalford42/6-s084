@@ -2,9 +2,9 @@ import numpy as np
 
 
 def make_tasks():
-    training_examples_per_length = 10
-    testing_examples_per_length = 10
-    min_length = 4
+    training_examples_per_length = 100
+    testing_examples_per_length = 1000
+    min_length = 10
     max_length = 10
 
     task_dict = {task_function.__name__: make_task(task_function, input_values,
@@ -71,11 +71,15 @@ def get_tasks():
     def elementwise_both_even(i1, i2):
         return [int(a % 2 == 0 and b % 2 == 0) for (a, b) in zip(i1, i2)]
 
+    addition_max = 10
+    def elementwise_addition(i1, i2):
+        return [((a + b) % addition_max) for (a, b) in zip(i1, i2)]
+
     all_tasks = ((bitwise_and, [0, 1]), 
             (bitwise_or, [0, 1]), 
             (bitwise_xor, [0, 1]),
             (reverse, [0, 1]),
-            (copy, [0, 1]),
+            (copy, list(range(0, 10))),
             (split_halfway, [0, 1]),
             (alternate_bits, [0, 1]),
             (copy_1_if_1, [0, 1]),
@@ -83,9 +87,11 @@ def get_tasks():
             (addition, [0, 1]),
             (parity, [0, 1]),
             (all_zeros_if_second_odd_else_copy_first, [0, 1]),
-            (elementwise_both_even, list(range(0, 10))))
+            (elementwise_both_even, list(range(0, 10))),
+            (elementwise_addition, list(range(0, addition_max))))
 
-    return all_tasks
+    # return all_tasks
+    return ((elementwise_addition, list(range(0, addition_max))),)
 
 
 def one_hot(i, n):

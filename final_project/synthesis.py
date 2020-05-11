@@ -7,8 +7,8 @@ def synthesize(examples):
         Take as input the training examples.
         Tries to synthesize a rule that gives the output for each index in the
         example for all of the examples. If it finds one, returns the node set,
-        which is the set of spots used by the synthesizer, and the "yes" cases
-        which determine how to set the output based by this.
+        which is the set of spots used by the synthesizer, and a dictionary
+        mapping inputs to the spots to the desired output for that index.
 
         If none is possible, returns false
     '''
@@ -28,15 +28,18 @@ def synthesize(examples):
     return False
 
 
-def test(node_set, yes_range, examples):
+def test(node_set, io_mapping, examples):
     bad_examples = []
     for (i1, i2, o) in examples:
         for ix in range(len(i1)):
             input_tuple = tuple(spot.f(i1, i2, ix, len(i1)) 
                     for spot in node_set)
-            prediction = 1 if input_tuple in yes_range else 0
-            if o[ix] != prediction:
+            if input_tuple not in io_mapping:
                 bad_examples.append((i1, i2, o))
+            else:
+                prediction = io_mapping[input_tuple]
+                if o[ix] != prediction:
+                    bad_examples.append((i1, i2, o))
 
     if len(bad_examples) == 0:
         return True
@@ -65,11 +68,10 @@ def process(node_set, examples):
                 example_mapping[input_tuple] = o[ix]
 
     # no conflicts, so we have a valid discriminator
-    # return the minimal set of yes examples for the range to predict "yes" on
-    yes_range = {k for (k, v) in example_mapping.items() if v == 1}
+    # return the mapping we found to use for the future
 
-    assert test(node_set, yes_range, examples)
-    return yes_range
+    assert test(node_set, example_mapping, examples)
+    return example_mapping
 
 
 class Spot:
@@ -146,8 +148,8 @@ def run_synthesis_on_task(data_dict, task_name):
         else:
             bad_examples = test_out
             print('synthesized program failed on test set:')
-            for b in bad_examples:
-                print(b)
+            # for b in bad_examples:
+                # print(b)
             return False
 
 
