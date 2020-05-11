@@ -276,7 +276,8 @@ def run_for_loop_synthesis():
     # run_for_loop_synthesis_on_task(data_dict, 'addition')
     # run_for_loop_synthesis_on_task(data_dict, 'parity')
     # run_for_loop_synthesis_on_task(data_dict, 'addition_with_a_twist')
-    run_for_loop_synthesis_on_task(data_dict, 'parity_single_bit')
+    # run_for_loop_synthesis_on_task(data_dict, 'parity_single_bit')
+    run_for_loop_synthesis_on_task(data_dict, 'running_parity')
 
 
 if __name__ == '__main__':

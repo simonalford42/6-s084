@@ -69,6 +69,13 @@ def get_tasks():
         out[0] = count % 2 == 0
         return out
 
+    def running_parity(i1, i2):
+        out = [0] * len(i1)
+        for i in range(len(i1) - 1, -1, -1):
+            out[i] = int(sum(i1[i:]) % 2 == 1)
+
+        return out
+
     def all_zeros_if_second_odd_else_copy_first(i1, i2):
         if i2[-1] == 1:
             return [0] * len(i1)
@@ -112,7 +119,8 @@ def get_tasks():
             (elementwise_both_even, list(range(0, 10))),
             (elementwise_addition, list(range(0, addition_max))),
             (addition_with_a_twist, [0, 1]),
-            (parity_single_bit, [0, 1]))
+            (parity_single_bit, [0, 1]),
+            (running_parity, [0, 1]))
 
     return all_tasks
 
