@@ -273,8 +273,9 @@ def run_per_index_on_all_tasks():
 
 def run_for_loop_synthesis():
     data_dict = data.make_tasks()
-    run_for_loop_synthesis_on_task(data_dict, 'addition')
-    run_for_loop_synthesis_on_task(data_dict, 'parity')
+    # run_for_loop_synthesis_on_task(data_dict, 'addition')
+    # run_for_loop_synthesis_on_task(data_dict, 'parity')
+    run_for_loop_synthesis_on_task(data_dict, 'addition_with_a_twist')
 
 
 if __name__ == '__main__':

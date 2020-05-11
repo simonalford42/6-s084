@@ -105,7 +105,7 @@ def get_for_loop_spot_fns():
         return aux
 
     return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('aux', c13),
-            Spot('i2[ix+1]', c11)]
+            Spot('i1[0]', c5)]
     # return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('i1[len(i1)-1]', c3),
     #         Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6),
     #         Spot('ix', index), Spot('i1[len(i1)-ix-1]', c7),

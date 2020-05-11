@@ -77,6 +77,20 @@ def get_tasks():
     def elementwise_addition(i1, i2):
         return [((a + b) % addition_max) for (a, b) in zip(i1, i2)]
 
+    def addition_with_a_twist(i1, i2):
+        # do some wonky stuff just so it uses four spots
+        carry = 0
+        out = []
+        for a, b in list(zip(i1, i2))[::-1]:
+            o = a + b + carry
+            carry = 1 if o > 1 and i1[0] else 0
+            o = o % 2
+            out.append(o)
+
+        # commented so that out length equals in length (wrap when overflowing)
+        # out = out + [carry]
+        return out[::-1]
+
     all_tasks = ((bitwise_and, [0, 1]), 
             (bitwise_or, [0, 1]), 
             (bitwise_xor, [0, 1]),
@@ -90,7 +104,8 @@ def get_tasks():
             (parity, [0, 1]),
             (all_zeros_if_second_odd_else_copy_first, [0, 1]),
             (elementwise_both_even, list(range(0, 10))),
-            (elementwise_addition, list(range(0, addition_max))))
+            (elementwise_addition, list(range(0, addition_max))),
+            (addition_with_a_twist, [0, 1]))
 
     return all_tasks
 
