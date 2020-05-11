@@ -54,14 +54,15 @@ def process_for_loop_aux_mapping(aux_nodeset, examples, spots, max_nodes=4,
     num_subsets = 2 ** num_inputs
     print('num subsets = 2^{} = {}'.format(num_inputs, num_subsets))
 
-    if num_subsets >= max_subsets:  # give up for tasks which take too long
-        # print('task with {}'.format(num_subsets) + ' subsets is going to ' 
-        # + 'take too long, quitting'.format(num_subsets))
-        return False
-
     inputs = itertools.product(*input_ranges)
     all_subsets = more_itertools.powerset(inputs)
+    count = 0
     for subset in all_subsets:
+        count += 1
+        if count >= max_subsets:
+            # print('task with {}'.format(num_subsets) + ' subsets is going to ' 
+            # + 'take too long, quitting'.format(num_subsets))
+            return False
         num_subsets -= 1
         yes_range = set(subset)
 
@@ -239,14 +240,14 @@ def run_for_loop_synthesis_on_task(data_dict, task_name, spots, max_nodes=4,
         return False
     else:
         aux_nodeset, out_nodeset, aux_mapping, out_mapping = synthesis_out
-        # print('aux nodeset: {}'.format(aux_nodeset))
-        # print('out nodeset: {}'.format(out_nodeset))
-        # print('aux mapping:')
-        # for val in aux_mapping.items():
-            # print(val)
-        # print('out mapping:')
-        # for val in out_mapping.items():
-            # print(val)
+        print('aux nodeset: {}'.format(aux_nodeset))
+        print('out nodeset: {}'.format(out_nodeset))
+        print('aux mapping:')
+        for val in aux_mapping.items():
+            print(val)
+        print('out mapping:')
+        for val in out_mapping.items():
+            print(val)
 
         test_out = test_for_loop(aux_nodeset, out_nodeset, aux_mapping,
                 out_mapping, data_dict[task_name]['test'])
@@ -285,7 +286,7 @@ def run_for_loop_on_all_tasks():
     data_dict = data.make_tasks()
     successes = []
     failures = []
-    for task_name in data_dict:
+    for task_name in ['elementwise_addition']:
         print(task_name)
         success = run_for_loop_synthesis_on_task(data_dict, task_name,
                 spot_functions.get_for_loop_spot_fns(), max_nodes=3,
@@ -320,6 +321,6 @@ def run_for_loop_originals():
 
 
 if __name__ == '__main__':
-    # run_per_index_on_all_tasks()
-    run_for_loop_originals()
+    run_per_index_on_all_tasks()
+    # run_for_loop_originals()
     # run_for_loop_on_all_tasks()

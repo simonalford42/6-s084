@@ -46,6 +46,10 @@ def get_tasks():
     def insert_1(i1, i2):
         return [1] + i1
 
+    def equality_at_even_indices_else_1(i1, i2):
+        return [1 if i % 2 == 1 else int(a == b) for i, (a, b) in
+                enumerate(zip(i1, i2))]
+
     def addition(i1, i2):
         carry = 0
         out = []
@@ -113,6 +117,7 @@ def get_tasks():
             (alternate_bits, [0, 1]),
             (copy_1_if_1, [0, 1]),
             (insert_1, [0, 1]),
+            (equality_at_even_indices_else_1, [0, 1]),
             (addition, [0, 1]),
             (parity, [0, 1]),
             (all_zeros_if_second_odd_else_copy_first, [0, 1]),
