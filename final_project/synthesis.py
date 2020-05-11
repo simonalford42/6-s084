@@ -87,6 +87,9 @@ class Spot:
 
 
 def get_spot_fns():
+    def index(i1, i2, ix, n):
+        return ix
+
     def c1(i1, i2, ix, n):
         return i1[ix]
 
@@ -105,22 +108,29 @@ def get_spot_fns():
     def c6(i1, i2, ix, n):
         return i2[0]
 
-    # def c7(i1, i2, ix, n):
-    #     return i1[ix + 1]
+    def c7(i1, i2, ix, n):
+        return i1[n - ix - 1]
 
-    # def c8(i1, i2, ix, n):
-    #     return i1[ix - 1]
+    def c8(i1, i2, ix, n):
+        return i2[n - ix - 1]
 
-    # def c9(i1, i2, ix, n):
-    #     return i2[ix + 1]
+    def c9(i1, i2, ix, n):
+        return 0 if ix + 1 >= n else i1[ix + 1]
 
-    # def c10(i1, i2, ix, n):
-    #     return i2[ix - 1]
+    def c10(i1, i2, ix, n):
+        return 0 if ix - 1 < 0 else i1[ix - 1]
+
+    def c11(i1, i2, ix, n):
+        return 0 if ix + 1 >= n else i2[ix + 1]
+
+    def c12(i1, i2, ix, n):
+        return 0 if ix - 1 < 0 else i2[ix - 1]
 
     return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('i1[n-1]', c3),
-            Spot('i2[n-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6)]
-            # Spot('i1[ix+1]', c7), Spot('i1[ix-1]', c8), Spot('i2[ix+1]', c9), 
-            # Spot('i2[ix-1]', c10)]
+            Spot('i2[n-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6),
+            Spot('ix', index), Spot('i1[n-ix-1]', c7), Spot('i2[n-ix-1]', c8), 
+            Spot('i1[ix+1]', c9), Spot('i1[ix-1]', c10), Spot('i2[ix+1]', c11), 
+            Spot('i2[ix-1]', c12)]
 
 
 def print_synthesis(node_set, yes_range):

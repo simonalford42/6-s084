@@ -90,8 +90,7 @@ def get_tasks():
             (elementwise_both_even, list(range(0, 10))),
             (elementwise_addition, list(range(0, addition_max))))
 
-    # return all_tasks
-    return ((elementwise_addition, list(range(0, addition_max))),)
+    return all_tasks
 
 
 def one_hot(i, n):
@@ -122,7 +121,7 @@ def make_task(task_function, input_values, training_examples_per_length=10,
                                        min_length, max_length, input_values)
 
     # augment with one-hot encoding of the index
-    # training_examples = [([i1, i2] + one_hot(i, len(i1)), task_function(i1, i2))
+    # training_examples = [(i1, i2, list(range(0, len(i1))), task_function(i1, i2))
             # for i, (i1, i2) in enumerate(training_input)]
     training_examples = [(i1, i2, task_function(i1, i2)) for (i1, i2) in
             training_input]
