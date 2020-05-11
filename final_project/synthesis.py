@@ -132,7 +132,7 @@ def test_for_loop(aux_nodeset, out_nodeset, aux_mapping, out_mapping, examples):
 
 def synthesize_for_loop(examples):
     spots = spot_functions.get_for_loop_spot_fns()
-    max_nodes = len(spots)
+    max_nodes = 5
     
     for num_nodes in range(1, max_nodes + 1):
         combinations = list(itertools.combinations(spots, num_nodes))
@@ -275,7 +275,8 @@ def run_for_loop_synthesis():
     data_dict = data.make_tasks()
     # run_for_loop_synthesis_on_task(data_dict, 'addition')
     # run_for_loop_synthesis_on_task(data_dict, 'parity')
-    run_for_loop_synthesis_on_task(data_dict, 'addition_with_a_twist')
+    # run_for_loop_synthesis_on_task(data_dict, 'addition_with_a_twist')
+    run_for_loop_synthesis_on_task(data_dict, 'parity_single_bit')
 
 
 if __name__ == '__main__':
