@@ -90,13 +90,13 @@ def get_for_loop_spot_fns():
         return i2[len(i2) - ix - 1]
 
     def c9(i1, i2, ix, aux):
-        return 0 if ix + 1 >= aux else i1[ix + 1]
+        return 0 if ix + 1 >= len(i1) else i1[ix + 1]
 
     def c10(i1, i2, ix, aux):
         return 0 if ix - 1 < 0 else i1[ix - 1]
 
     def c11(i1, i2, ix, aux):
-        return 0 if ix + 1 >= aux else i2[ix + 1]
+        return 0 if ix + 1 >= len(i1) else i2[ix + 1]
 
     def c12(i1, i2, ix, aux):
         return 0 if ix - 1 < 0 else i2[ix - 1]
@@ -104,7 +104,8 @@ def get_for_loop_spot_fns():
     def c13(i1, i2, ix, aux):
         return aux
 
-    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('aux', c13)]
+    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('aux', c13),
+            Spot('i2[ix+1]', c11)]
     # return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('i1[len(i1)-1]', c3),
     #         Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6),
     #         Spot('ix', index), Spot('i1[len(i1)-ix-1]', c7),

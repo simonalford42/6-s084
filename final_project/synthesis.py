@@ -62,7 +62,7 @@ def process_for_loop_aux_mapping(aux_nodeset, examples):
                 itertools.product(*input_ranges)}
 
         spots = spot_functions.get_for_loop_spot_fns()
-        for num_nodes in [3]:  # range(1, len(aux_nodeset) + 1):
+        for num_nodes in range(1, len(aux_nodeset) + 1):
             combinations = list(itertools.combinations(spots, num_nodes))
             for out_nodeset in combinations:
                 process_out = process_for_loop_out_mapping(aux_nodeset,
@@ -132,10 +132,9 @@ def test_for_loop(aux_nodeset, out_nodeset, aux_mapping, out_mapping, examples):
 
 def synthesize_for_loop(examples):
     spots = spot_functions.get_for_loop_spot_fns()
-    # max_nodes = len(spots)
-    # max_nodes = 3
+    max_nodes = len(spots)
     
-    for num_nodes in [3]:  # range(1, max_nodes + 1):
+    for num_nodes in range(1, max_nodes + 1):
         combinations = list(itertools.combinations(spots, num_nodes))
         for aux_nodeset in combinations:
             print(aux_nodeset)
@@ -275,6 +274,7 @@ def run_per_index_on_all_tasks():
 def run_for_loop_synthesis():
     data_dict = data.make_tasks()
     run_for_loop_synthesis_on_task(data_dict, 'addition')
+    run_for_loop_synthesis_on_task(data_dict, 'parity')
 
 
 if __name__ == '__main__':

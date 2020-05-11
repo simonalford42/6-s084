@@ -3,8 +3,8 @@ import numpy as np
 
 def make_tasks():
     training_examples_per_length = 10
-    testing_examples_per_length = 100
-    min_length = 10
+    testing_examples_per_length = 10
+    min_length = 5
     max_length = 10
 
     task_dict = {task_function.__name__: make_task(task_function, input_values,
@@ -73,6 +73,7 @@ def get_tasks():
         return [int(a % 2 == 0 and b % 2 == 0) for (a, b) in zip(i1, i2)]
 
     addition_max = 10
+
     def elementwise_addition(i1, i2):
         return [((a + b) % addition_max) for (a, b) in zip(i1, i2)]
 
