@@ -22,8 +22,8 @@ def synthesize(examples):
             # output rules that makes it work. if none possible, returns false.
             process_out = process(node_set, examples)
             if process_out is not False:
-                yes_range = process_out
-                return node_set, yes_range
+                mapping = process_out
+                return node_set, mapping
 
     return False
 
@@ -133,10 +133,10 @@ def get_spot_fns():
             Spot('i2[ix-1]', c12)]
 
 
-def print_synthesis(node_set, yes_range):
+def print_synthesis(node_set, mapping):
     print('node set: ' + str(node_set))
-    print('yes_range:')
-    for val in yes_range:
+    print('mapping:')
+    for val in mapping.items():
         print(val)
 
 
@@ -148,9 +148,9 @@ def run_synthesis_on_task(data_dict, task_name):
         print('Synthesis was not possible')
         return False
     else:
-        (node_set, yes_range) = synthesis_out
-        print_synthesis(node_set, yes_range)
-        test_out = test(node_set, yes_range, data_dict[task_name]['test'])
+        (node_set, mappings) = synthesis_out
+        print_synthesis(node_set, mappings)
+        test_out = test(node_set, mappings, data_dict[task_name]['test'])
 
         if test_out is True:
             print('synthesized program is correct')
@@ -158,8 +158,8 @@ def run_synthesis_on_task(data_dict, task_name):
         else:
             bad_examples = test_out
             print('synthesized program failed on test set:')
-            # for b in bad_examples:
-                # print(b)
+            for b in bad_examples:
+                print(b)
             return False
 
 
