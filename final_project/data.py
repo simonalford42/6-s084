@@ -40,7 +40,7 @@ def get_tasks():
     def alternate_bits(i1, i2):
         return [a if i % 2 == 0 else b for i, (a, b) in enumerate(zip(i1, i2))]
 
-    def copy_1_if_1(i1, i2):
+    def copy_a_if_a0(i1, i2):
         return i1 if i1[0] == 1 else i2
 
     def insert_1(i1, i2):
@@ -80,7 +80,7 @@ def get_tasks():
 
         return out
 
-    def all_zeros_if_second_odd_else_copy_first(i1, i2):
+    def all_zeros_if_b_odd_else_copy_first(i1, i2):
         if i2[-1] == 1:
             return [0] * len(i1)
         else:
@@ -115,12 +115,12 @@ def get_tasks():
             (copy, list(range(0, 10))),
             # (split_halfway, [0, 1]),
             (alternate_bits, [0, 1]),
-            (copy_1_if_1, [0, 1]),
+            (copy_a_if_a0, [0, 1]),
             (insert_1, [0, 1]),
             (equality_at_even_indices_else_1, [0, 1]),
             (addition, [0, 1]),
             # (parity, [0, 1]),
-            (all_zeros_if_second_odd_else_copy_first, [0, 1]),
+            (all_zeros_if_b_odd_else_copy_first, [0, 1]),
             (elementwise_both_even, list(range(0, 10))),
             (elementwise_addition, list(range(0, addition_max))),
             (addition_with_a_twist, [0, 1]),

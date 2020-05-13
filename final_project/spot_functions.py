@@ -15,114 +15,114 @@ class Spot:
 
 
 def get_spot_fns():
-    def index(i1, i2, ix, n):
+    def index(a, b, ix, n):
         return ix
 
-    def c1(i1, i2, ix, n):
-        return i1[ix]
+    def c1(a, b, ix, n):
+        return a[ix]
 
-    def c2(i1, i2, ix, n):
-        return i2[ix]
+    def c2(a, b, ix, n):
+        return b[ix]
 
-    def c3(i1, i2, ix, n):
-        return i1[n - 1]
+    def c3(a, b, ix, n):
+        return a[n - 1]
 
-    def c4(i1, i2, ix, n):
-        return i2[n - 1]
+    def c4(a, b, ix, n):
+        return b[n - 1]
 
-    def c5(i1, i2, ix, n):
-        return i1[0]
+    def c5(a, b, ix, n):
+        return a[0]
 
-    def c6(i1, i2, ix, n):
-        return i2[0]
+    def c6(a, b, ix, n):
+        return b[0]
 
-    def c7(i1, i2, ix, n):
-        return i1[n - ix - 1]
+    def c7(a, b, ix, n):
+        return a[n - ix - 1]
 
-    def c8(i1, i2, ix, n):
-        return i2[n - ix - 1]
+    def c8(a, b, ix, n):
+        return b[n - ix - 1]
 
-    def c9(i1, i2, ix, n):
-        return 0 if ix + 1 >= n else i1[ix + 1]
+    def c9(a, b, ix, n):
+        return 0 if ix + 1 >= n else a[ix + 1]
 
-    def c10(i1, i2, ix, n):
-        return 0 if ix - 1 < 0 else i1[ix - 1]
+    def c10(a, b, ix, n):
+        return 0 if ix - 1 < 0 else a[ix - 1]
 
-    def c11(i1, i2, ix, n):
-        return 0 if ix + 1 >= n else i2[ix + 1]
+    def c11(a, b, ix, n):
+        return 0 if ix + 1 >= n else b[ix + 1]
 
-    def c12(i1, i2, ix, n):
-        return 0 if ix - 1 < 0 else i2[ix - 1]
+    def c12(a, b, ix, n):
+        return 0 if ix - 1 < 0 else b[ix - 1]
 
-    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('i1[n-1]', c3),
-            Spot('i2[n-1]', c4), Spot('i1[0]', c5), Spot('i2[0]', c6),
-            Spot('ix', index), Spot('i1[n-ix-1]', c7), Spot('i2[n-ix-1]', c8), 
-            Spot('i1[ix+1]', c9), Spot('i1[ix-1]', c10), Spot('i2[ix+1]', c11), 
-            Spot('i2[ix-1]', c12)]
+    return [Spot('a[ix]', c1), Spot('b[ix]', c2), Spot('a[n-1]', c3),
+            Spot('b[n-1]', c4), Spot('a[0]', c5), Spot('b[0]', c6),
+            Spot('ix', index), 
+            Spot('a[ix+1]', c9), Spot('a[ix-1]', c10), Spot('b[ix+1]', c11), 
+            Spot('b[ix-1]', c12)]
 
 
-def index(i1, i2, ix, aux):
+def index(a, b, ix, aux):
     return ix
 
 
-def c1(i1, i2, ix, aux):
-    return i1[ix]
+def c1(a, b, ix, aux):
+    return a[ix]
 
 
-def c2(i1, i2, ix, aux):
-    return i2[ix]
+def c2(a, b, ix, aux):
+    return b[ix]
 
-def c3(i1, i2, ix, aux):
-    return i1[len(i1) - 1]
+def c3(a, b, ix, aux):
+    return a[len(a) - 1]
 
-def c4(i1, i2, ix, aux):
-    return i2[len(i2) - 1]
+def c4(a, b, ix, aux):
+    return b[len(b) - 1]
 
-def c5(i1, i2, ix, aux):
-    return i1[0]
+def c5(a, b, ix, aux):
+    return a[0]
 
-def c6(i1, i2, ix, aux):
-    return i2[0]
+def c6(a, b, ix, aux):
+    return b[0]
 
-def c7(i1, i2, ix, aux):
-    return i1[len(i1) - ix - 1]
+def c7(a, b, ix, aux):
+    return a[len(a) - ix - 1]
 
-def c8(i1, i2, ix, aux):
-    return i2[len(i2) - ix - 1]
+def c8(a, b, ix, aux):
+    return b[len(b) - ix - 1]
 
-def c9(i1, i2, ix, aux):
-    return 0 if ix + 1 >= len(i1) else i1[ix + 1]
+def c9(a, b, ix, aux):
+    return 0 if ix + 1 >= len(a) else a[ix + 1]
 
-def c10(i1, i2, ix, aux):
-    return 0 if ix - 1 < 0 else i1[ix - 1]
+def c10(a, b, ix, aux):
+    return 0 if ix - 1 < 0 else a[ix - 1]
 
-def c11(i1, i2, ix, aux):
-    return 0 if ix + 1 >= len(i1) else i2[ix + 1]
+def c11(a, b, ix, aux):
+    return 0 if ix + 1 >= len(a) else b[ix + 1]
 
-def c12(i1, i2, ix, aux):
-    return 0 if ix - 1 < 0 else i2[ix - 1]
+def c12(a, b, ix, aux):
+    return 0 if ix - 1 < 0 else b[ix - 1]
 
-def c13(i1, i2, ix, aux):
+def c13(a, b, ix, aux):
     return aux
 
-def const(i1, i2, ix, aux):
+def const(a, b, ix, aux):
     return 0
 
-def end(i1, i2, ix, aux):
+def end(a, b, ix, aux):
     return int(ix == 0)
 
 def get_for_loop_spot_fns():
-    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), 
-            Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), 
-            Spot('ix', index), Spot('i1[len(i1)-ix-1]', c7),
-            Spot('i1[ix-1]', c10),
+    return [Spot('a[ix]', c1), Spot('b[ix]', c2), 
+            Spot('b[len(a)-1]', c4), Spot('a[0]', c5), 
+            Spot('ix', index), Spot('a[len(a)-ix-1]', c7),
+            Spot('a[ix-1]', c10),
             Spot('aux', c13), Spot('c', const),
             Spot('end', end)]
 
 
 def get_for_loop_originals():
-    return [Spot('i1[ix]', c1), Spot('i2[ix]', c2), Spot('aux', c13),
-            Spot('c', const), Spot('end', end), Spot('i1[0]', c5)]
+    return [Spot('a[ix]', c1), Spot('b[ix]', c2), Spot('aux', c13),
+            Spot('c', const), Spot('end', end), Spot('a[0]', c5)]
 
 
 

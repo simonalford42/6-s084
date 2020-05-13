@@ -209,11 +209,11 @@ def run_per_index_synthesis_on_task(data_dict, task_name):
         return False
     else:
         (nodeset, mapping) = synthesis_out
-        print('nodeset: {}'.format(nodeset))
+        print('\tspots: {}'.format(nodeset))
         
-        # print('mapping:')
-        # for val in mapping.items():
-        #     print(val)
+        print('\tmapping:')
+        for val in mapping.items():
+            print('\t\t' + str(val))
 
         test_out = test_per_index(nodeset, mapping, 
                 data_dict[task_name]['test'])
@@ -240,14 +240,14 @@ def run_for_loop_synthesis_on_task(data_dict, task_name, spots, max_nodes=4,
         return False
     else:
         aux_nodeset, out_nodeset, aux_mapping, out_mapping = synthesis_out
-        print('aux nodeset: {}'.format(aux_nodeset))
-        print('out nodeset: {}'.format(out_nodeset))
-        print('aux mapping:')
+        print('\taux spots: {}'.format(aux_nodeset))
+        print('\tout spots: {}'.format(out_nodeset))
+        print('\taux mapping:')
         for val in aux_mapping.items():
-            print(val)
-        print('out mapping:')
+            print('\t\t' + str(val))
+        print('\tout mapping:')
         for val in out_mapping.items():
-            print(val)
+            print('\t\t' + str(val))
 
         test_out = test_for_loop(aux_nodeset, out_nodeset, aux_mapping,
                 out_mapping, data_dict[task_name]['test'])
@@ -271,7 +271,7 @@ def run_per_index_on_all_tasks():
     successes = []
     failures = []
     for task_name in data_dict:
-        # print(task_name)
+        print(task_name)
         success = run_per_index_synthesis_on_task(data_dict, task_name)
         if success:
             successes.append(task_name)
