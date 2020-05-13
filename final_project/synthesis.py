@@ -52,7 +52,7 @@ def process_for_loop_aux_mapping(aux_nodeset, examples, spots, max_nodes=4,
     input_ranges = get_input_ranges(aux_nodeset, examples)
     num_inputs = np.prod([len(r) for r in input_ranges])
     num_subsets = 2 ** num_inputs
-    print('num subsets = 2^{} = {}'.format(num_inputs, num_subsets))
+    # print('num subsets = 2^{} = {}'.format(num_inputs, num_subsets))
 
     inputs = itertools.product(*input_ranges)
     all_subsets = more_itertools.powerset(inputs)
@@ -140,7 +140,7 @@ def test_for_loop(aux_nodeset, out_nodeset, aux_mapping, out_mapping, examples):
 def synthesize_for_loop(examples, spots, max_nodes=4, max_subsets=10000):
     for num_nodes in range(1, max_nodes + 1):
         combinations = list(itertools.combinations(spots, num_nodes))
-        print('num combinations: {}'.format(len(combinations)))
+        # print('num combinations: {}'.format(len(combinations)))
         for aux_nodeset in combinations:
             # print(aux_nodeset)
             # processes the examples on this node set to determine the right 
@@ -222,7 +222,7 @@ def run_per_index_synthesis_on_task(data_dict, task_name):
             # print('synthesized program passed test cases')
             return True
         else:
-            bad_examples = test_out
+            # bad_examples = test_out
             # print('synthesized program failed on test set:')
             # for b in bad_examples:
                 # print(b)
@@ -256,7 +256,7 @@ def run_for_loop_synthesis_on_task(data_dict, task_name, spots, max_nodes=4,
             # print('synthesized program past test cases')
             return True
         else:
-            bad_examples = test_out
+            # bad_examples = test_out
             # print('synthesized program failed on test set:')
             # print(len(bad_examples))
             # if len(bad_examples) < 10:
@@ -286,10 +286,10 @@ def run_for_loop_on_all_tasks():
     data_dict = data.make_tasks()
     successes = []
     failures = []
-    for task_name in ['elementwise_addition']:
+    for task_name in data_dict:
         print(task_name)
         success = run_for_loop_synthesis_on_task(data_dict, task_name,
-                spot_functions.get_for_loop_spot_fns(), max_nodes=3,
+                spot_functions.get_for_loop_spot_fns(), max_nodes=4,
                 max_subsets=10000)
         if success:
             successes.append(task_name)
@@ -306,7 +306,7 @@ def run_for_loop_originals():
 
     successes = []
     failures = []
-    for task_name in ['addition', 'parity', 'addition_with_a_twist',
+    for task_name in ['addition', 'addition_with_a_twist',
             'parity_single_bit', 'running_parity']:
         print(task_name)
         success = run_for_loop_synthesis_on_task(data_dict, task_name, spots,
@@ -321,6 +321,6 @@ def run_for_loop_originals():
 
 
 if __name__ == '__main__':
-    run_per_index_on_all_tasks()
+    # run_per_index_on_all_tasks()
     # run_for_loop_originals()
-    # run_for_loop_on_all_tasks()
+    run_for_loop_on_all_tasks()

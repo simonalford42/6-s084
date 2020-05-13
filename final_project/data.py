@@ -119,7 +119,7 @@ def get_tasks():
             (insert_1, [0, 1]),
             (equality_at_even_indices_else_1, [0, 1]),
             (addition, [0, 1]),
-            (parity, [0, 1]),
+            # (parity, [0, 1]),
             (all_zeros_if_second_odd_else_copy_first, [0, 1]),
             (elementwise_both_even, list(range(0, 10))),
             (elementwise_addition, list(range(0, addition_max))),

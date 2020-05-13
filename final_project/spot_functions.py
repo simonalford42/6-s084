@@ -64,8 +64,10 @@ def get_spot_fns():
 def index(i1, i2, ix, aux):
     return ix
 
+
 def c1(i1, i2, ix, aux):
     return i1[ix]
+
 
 def c2(i1, i2, ix, aux):
     return i2[ix]
@@ -114,7 +116,7 @@ def get_for_loop_spot_fns():
             Spot('i2[len(i1)-1]', c4), Spot('i1[0]', c5), 
             Spot('ix', index), Spot('i1[len(i1)-ix-1]', c7),
             Spot('i1[ix-1]', c10),
-            Spot('aux', c12), Spot('c', const),
+            Spot('aux', c13), Spot('c', const),
             Spot('end', end)]
 
 
